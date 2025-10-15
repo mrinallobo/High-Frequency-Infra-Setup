@@ -1,4 +1,4 @@
-# ⚡ HIGH-FREQUENCY INFRA SETUP
+# HIGH-FREQUENCY INFRA SETUP
 
 ```
 ██╗  ██╗███████╗████████╗    ████████╗██████╗  █████╗ ██████╗ ███████╗
@@ -9,141 +9,81 @@
 ╚═╝  ╚═╝╚═╝        ╚═╝          ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝
 ```
 
-> **Ultra-low latency trading infrastructure engineered for sub-millisecond execution**  
-> 🎯 **1–3ms average fill registration** | 🚀 **Sub-1ms optimal performance**
-![Grafana Loki logs](image-1.png)
+**Low-latency trading infrastructure built for 1-3ms average fill registration**
+
 ---
+![Grafana loki logs](image.png)
+## Overview
 
-## 🌐 OVERVIEW
+This setup provisions infrastructure colocated with Bybit's AWS Singapore deployment (apse1-az3). After running latency tests across availability zones, apse1-b consistently showed the lowest latency and is the recommended deployment target.
 
-This infrastructure is purpose-built to colocate with **Bybit's AWS Singapore** deployment (`apse1-az3`). Extensive latency testing confirms `apse1-b` as the optimal availability zone for deployment.
+The VM is optimized at the system and network level for high-frequency trading workloads. Key optimizations include disabled Nagle's algorithm, hypertuned networking stack, CPU core pinning, and Docker pre-configured for containerized execution.
 
-### ⚙️ INFRASTRUCTURE HIGHLIGHTS
+Monitoring is built-in via Prometheus and Grafana. Optional log aggregation available through Promtail and Loki.
 
-```
-┌─────────────────────────────────────────────┐
-│  🔧 SYSTEM OPTIMIZATIONS                    │
-├─────────────────────────────────────────────┤
-│  ✓ Nagle's algorithm disabled               │
-│  ✓ Hypertuned networking stack              │
-│  ✓ CPU core pinning enabled                 │
-│  ✓ Predictable latency under load           │
-└─────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────┐
-│  📦 PRE-CONFIGURED STACK                    │
-├─────────────────────────────────────────────┤
-│  ✓ Docker runtime                           │
-│  ✓ Prometheus + Grafana monitoring          │
-│  ✓ Promtail + Loki (optional)               │
-│  ✓ Production-ready metrics & dashboards    │
-└─────────────────────────────────────────────┘
-```
-
-**Seamless integration** with Rust execution scripts for **sub-millisecond order fills** under optimal network conditions.
+When paired with optimized Rust execution scripts, this infrastructure achieves sub-1ms fill times under optimal conditions.
 
 ---
 
-## 📋 PREREQUISITES
+## Prerequisites
 
-Before provisioning, ensure you have:
+You'll need the following installed and configured:
 
-- [ ] **SSH key pair** in `~/.ssh/`
-- [ ] **AWS CLI v2+** installed and configured
-- [ ] **Terraform 1.5.0+** installed
+- Public/private SSH key pair in `~/.ssh`
+- AWS CLI v2 or higher
+- Terraform 1.5.0+
 
 ---
 
-## 🚀 SETUP INSTRUCTIONS
+## Setup
 
-### **1️⃣ Configure Your Environment**
+**1. Configure your environment**
 
-Adjust these files to match your deployment requirements:
-
-```bash
-📝 terraform.tfvars
-📝 variables.tf
+Edit these files to match your setup:
+```
+terraform.tfvars
+variables.tf
 ```
 
-### **2️⃣ Initialize Terraform**
-
+**2. Initialize Terraform**
 ```bash
 terraform init
 ```
 
-### **3️⃣ Review the Execution Plan**
-
+**3. Review the plan**
 ```bash
 terraform plan
 ```
 
-### **4️⃣ Deploy Infrastructure**
-
+**4. Deploy**
 ```bash
 terraform apply -auto-approve
 ```
 
-🎉 **Your high-frequency trading infrastructure is now live!**
-
 ---
 
-## 🗑️ TEARDOWN
+## Teardown
 
 To destroy all provisioned resources:
-
 ```bash
 terraform destroy
 ```
 
 ---
 
-## 📊 MONITORING & OBSERVABILITY
+## Monitoring
 
-### **Real-Time Metrics**
+The stack includes Prometheus and Grafana pre-configured for latency monitoring and system metrics. Grafana dashboards provide real-time visibility into fill latency (p50, p95, p99), network performance, and resource utilization.
 
-This setup includes a **production-grade monitoring stack**:
-
-| Tool | Purpose |
-|------|---------|
-| 📈 **Prometheus** | Metrics collection & time-series storage |
-| 📊 **Grafana** | Real-time visualization dashboards |
-| 📝 **Promtail + Loki** | Centralized log aggregation (optional) |
-
-### **Key Metrics Tracked**
-
-- Order fill latency (p50, p95, p99)
-- Network round-trip times
-- CPU core utilization
-- System resource health
-
-Access Grafana dashboards to visualize **latency trends** and **infrastructure health** in real-time.
+For centralized logging, integrate Promtail and Loki to correlate metrics with application logs.
 
 ---
 
-## ⚠️ IMPORTANT NOTES
+## Performance Notes
 
-> **This infrastructure is engineered for latency-critical high-frequency trading environments.**
+This infrastructure is built specifically for latency-critical trading. Through system tuning, CPU pinning, and network optimizations, it consistently delivers sub-millisecond response times for order fill registration when used with optimized execution code.
 
-Through aggressive system tuning, strategic CPU pinning, and network stack optimization, this setup consistently achieves:
-
-- ✅ **Sub-millisecond response times** for order fill registration
-- ✅ **Predictable performance** under market volatility
-- ✅ **Production stability** with comprehensive observability
-
-Pair this infrastructure with optimized Rust execution scripts to unlock **maximum performance**.
-
----
-
-<div align="center">
-
-**Built for speed. Optimized for precision. Engineered for HFT.**
-
-```
-┌─────────────────────────────────────┐
-│  🎯 TARGET: SUB-1MS FILLS           │
-│  📍 REGION: AWS Singapore (apse1-b) │
-│  🔥 STATUS: PRODUCTION READY        │
-└─────────────────────────────────────┘
-```
-
-</div>
+Target metrics under optimal conditions:
+- Average fill registration: 1-3ms
+- Peak performance: sub-1ms
+- Deployment region: AWS Singapore (apse1-b)
